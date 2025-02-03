@@ -7,7 +7,7 @@ import { TodoItemsProvider } from "./store/TodoItemsContext";
 function App() {
   return (
     <TodoItemsProvider>
-      <center>
+      <center className="mt-10">
         <AppName />
         <AddTodo />
         <LoadItems />

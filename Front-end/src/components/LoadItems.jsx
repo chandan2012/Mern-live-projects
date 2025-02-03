@@ -1,7 +1,5 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TodoItemsContext } from "../store/TodoItemsContext";
-import { useEffect } from "react";
-import { useState } from "react";
 import { todoItemToClientModel } from "../utils/ModelUtil";
 
 const LoadItems = () => {
@@ -25,12 +23,13 @@ const LoadItems = () => {
     <>
       {isLoading && (
         <div className="text-center">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <span className="block mt-2 text-gray-500">Loading...</span>
         </div>
       )}
-      {!isLoading && todoItems.length === 0 && <p>Enjoy your day</p>}
+      {!isLoading && todoItems.length === 0 && (
+        <p className="text-center text-gray-700">Enjoy your day</p>
+      )}
     </>
   );
 };
