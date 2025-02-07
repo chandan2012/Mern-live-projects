@@ -5,19 +5,25 @@ import { todoItemToClientModel } from "../utils/ModelUtil";
 const LoadItems = () => {
   const { todoItems, addAllTodoItems } = useContext(TodoItemsContext);
   const [isLoading, setIsLoading] = useState(false);
-
+ 
   useEffect(() => {
-    setIsLoading(true);
-    fetch("http://localhost:3000/todos")
-      .then((res) => res.json())
-      .then((items) => {
+    const fetchTodos = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch("http://localhost:3000/todos");
+        const items = await response.json();
         const newItems = items.map(todoItemToClientModel);
         addAllTodoItems(newItems);
-      })
-      .finally(() => {
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+  
+    fetchTodos();
   }, []);
+  
 
   return (
     <>

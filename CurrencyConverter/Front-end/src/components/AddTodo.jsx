@@ -7,31 +7,42 @@ const AddTodo = () => {
   const todoTextInput = useRef();
   const todoDateInput = useRef();
   const { addTodoItem } = useContext(TodoItemsContext);  
-
-  const addHandler = () => {
-    const todoText = todoTextInput.current.value;
-    const todoDate = todoDateInput.current.value;    
-    if(todoText.length === 0 || todoDate.length === 0) return alert('Please enter a todo and date');
-    console.log(todoText.length)
-    todoTextInput.current.value = '';
-    todoDateInput.current.value = '';
-    fetch("http://localhost:3000/todos", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        task: todoText,
-        date: todoDate,
-      }),
-    })
-      .then((res) => res.json())
-      .then((serverItem) => {
-        const { id, todoText, todoDate } = todoItemToClientModel(serverItem);
-        addTodoItem(id, todoText, todoDate);
+  
+  const addHandler = async () => {
+    const todoText = todoTextInput.current.value.trim();
+    const todoDate = todoDateInput.current.value.trim();
+  
+    if (!todoText || !todoDate) {
+      return alert("Please enter a todo and date");
+    }
+  
+    try {
+      const response = await fetch("http://localhost:3000/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ task: todoText, date: todoDate }),
       });
+  
+      if (!response.ok) {
+        throw new Error("Failed to add todo");
+      }
+  
+      const serverItem = await response.json();
+      const newItem = todoItemToClientModel(serverItem);
+      
+      addTodoItem(newItem.id, newItem.todoText, newItem.todoDate);
+  
+      // Clear input fields after successful submission
+      todoTextInput.current.value = "";
+      todoDateInput.current.value = "";
+    } catch (error) {
+      console.error("Error adding todo:", error);
+      alert("An error occurred while adding the todo. Please try again.");
+    }
   };
-
+  
   return (
     <div className="p-4 max-w-lg mx-auto">
       <div className="flex gap-4 items-center">

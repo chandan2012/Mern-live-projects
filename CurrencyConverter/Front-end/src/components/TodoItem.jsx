@@ -63,8 +63,8 @@ const TodoItem = ({ id, todoText, todoDate,completed }) => {
   return (
     <div className="flex items-center justify-between p-4 border-b border-gray-200">
       <input checked={isChecked} onChange={toggleHandler} type="checkbox" className="mr-4 w-5 h-5 text-pink-600 bg-gray-100 border-gray-300 rounded-full focus:ring-0 cursor-pointer" />
-      <div className="flex-1 text-gray-700 truncate text-start">{todoText}</div>
-      <div className="text-gray-500 text-sm">{formattedDate}</div>
+      <div className={`${isChecked ? "line-through" : ""} flex-1 text-gray-700 truncate text-start`}>{todoText}</div>
+      <div className={`${isChecked ? "line-through" : ""} text-gray-500 text-sm`}>{formattedDate}</div>
       <div className="ml-4">
         <Button btnType="danger" btnText="Delete" handler={deleteHandler} />
       </div>
