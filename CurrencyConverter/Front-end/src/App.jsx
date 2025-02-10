@@ -1,19 +1,12 @@
-import AddTodo from "./components/AddTodo";
-import AppName from "./components/AppName";
-import LoadItems from "./components/LoadItems";
-import TodoItems from "./components/TodoItems";
-import { TodoItemsProvider } from "./store/TodoItemsContext";
+import CurrencyConverter from "./components/currencyConverter";
+
 
 function App() {
   return (
-    <TodoItemsProvider>
-      <center className="mt-10">
-        <AppName />
-        <AddTodo />
-        <LoadItems />
-        <TodoItems />
-      </center>
-    </TodoItemsProvider>
+      <div className="mt-10 w-1/2 m-auto  bg-white rounded-lg shadow-xl p-5">
+        <h1 className="text-5xl font-bold mb-4">Currency Converter</h1>
+        <CurrencyConverter />
+      </div>
   );
 }
 

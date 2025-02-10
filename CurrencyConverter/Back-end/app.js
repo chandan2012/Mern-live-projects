@@ -1,35 +1,31 @@
-const ENV = process.env.NODE_ENV || 'production'
-require('dotenv').config({
-  path: `.env.${ENV}`
-});
 const express = require("express");
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const cors = require("cors");
-
 const errorController = require("./controllers/errorController");
-const itemRouter = require('./routers/itemRouter');
+const currencyConverterRouter = require("./routers/currencyConverterRouter");
+const currencyConverter = require("./services/currencyConverter");
+const cors = require("cors");
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-const MONGODB_URI =`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@airbnb.no48h.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
+// Initialize exchange rates before starting the server
 
-app.use(bodyParser.urlencoded({ extended: true }));
+async function startServer() {
+  try {
+    await currencyConverter.initializeRates();
 
-app.use(itemRouter);
-app.use(errorController.get404);
+    app.use("/api", currencyConverterRouter);
+    app.use(errorController.get404);
 
-const PORT = process.env.PORT  || 3000;
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => {
-    console.log("Connected to MongoDB Atlas successfully!");
+    const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-      console.log(`http://localhost:${PORT}`);
+      console.log(`Server running at: http://localhost:${PORT}`);
     });
-  })
-  .catch((err) => {
-    console.error("Failed to connect to MongoDB Atlas:", err);
-  });
+  } catch (error) {
+    console.error("Error initializing exchange rates:", error);
+    process.exit(1);
+  }
+}
+startServer();
