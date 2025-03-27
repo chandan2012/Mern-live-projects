@@ -9,7 +9,7 @@ class currencyService {
       }
       async initializeRates () {
         try{
-            const response = await axios.get(`${this.BASE_URL}/${this.API_KEY}/latest/INR`)
+            const response = await axios.get(`${this.BASE_URL}/${this.API_KEY}/latest/INR`)            
             this.rates = response.data.conversion_rates;
             this.lastUpdated = new Date();
             console.log('Exchange rates initialized successfully');
